@@ -1,6 +1,7 @@
 // app.js
 const express = require("express");
 const mongoose = require("mongoose");
+const socketIo = require("socket.io");
 
 const app = express();
 const server = require("http").Server(app);
