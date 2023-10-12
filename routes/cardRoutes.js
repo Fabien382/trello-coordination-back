@@ -1,6 +1,7 @@
 // routes/cardRoutes.js
 const express = require("express");
 const router = express.Router();
+const authenticateJWT = require("../middlewares/authMiddleware"); // Importez le middleware d'authentification
 
 // Import the card model
 const Card = require("../models/Card");
@@ -10,6 +11,10 @@ router.post("/", async (req, res) => {
   try {
     const card = new Card(req.body);
     await card.save();
+
+    // Socket.io
+    req.app.io.sockets.emit("cardCreated", card);
+
     res.status(201).json(card);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -20,6 +25,10 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const cards = await Card.find();
+
+    // Socket.io
+    req.app.io.sockets.emit("cardUpdated", card);
+
     res.json(cards);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -77,4 +86,5 @@ async function getCard(req, res, next) {
   res.card = card;
   next();
 }
+
 module.exports = router;
