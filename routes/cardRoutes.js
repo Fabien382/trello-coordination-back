@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
     const cards = await Card.find();
 
     // Socket.io
-    req.app.io.sockets.emit("cardUpdated", card);
+    req.app.io.sockets.emit("cardUpdated", cards);
 
     res.json(cards);
   } catch (err) {
