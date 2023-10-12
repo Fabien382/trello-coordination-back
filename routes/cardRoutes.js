@@ -12,8 +12,9 @@ router.post("/", async (req, res) => {
     const card = new Card(req.body);
     await card.save();
 
+    const cards = await Card.find();
     // Socket.io
-    req.app.io.sockets.emit("cardCreated", card);
+    req.app.io.sockets.emit("cards", cards);
 
     res.status(201).json(card);
   } catch (err) {
@@ -25,9 +26,6 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const cards = await Card.find();
-
-    // Socket.io
-    req.app.io.sockets.emit("cardUpdated", cards);
 
     res.json(cards);
   } catch (err) {
@@ -56,6 +54,11 @@ router.patch("/:id", getCard, async (req, res) => {
   }
   try {
     const updatedCard = await res.card.save();
+
+    const cards = await Card.find();
+    // Socket.io
+    req.app.io.sockets.emit("cards", cards);
+
     res.json(updatedCard);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -66,7 +69,11 @@ router.patch("/:id", getCard, async (req, res) => {
 router.delete("/:id", getCard, async (req, res) => {
   try {
     console.log(res.card);
-    await res.card.delete();
+    await Card.findByIdAndDelete(req.params.id);
+
+    const cards = await Card.find();
+    // Socket.io
+    req.app.io.sockets.emit("cards", cards);
 
     res.json({ message: "Deleted card" });
   } catch (err) {
