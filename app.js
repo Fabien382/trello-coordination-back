@@ -7,6 +7,7 @@ const app = express();
 const server = require("http").Server(app);
 const io = socketIo(server); // Initialisation de Socket.IO
 const PORT = process.env.PORT || 3004;
+const cors = require("cors"); // Importez le middleware cors
 
 // Connect to MongoDB
 mongoose
@@ -26,6 +27,9 @@ mongoose
 
 // Middleware
 app.use(express.json());
+
+// Utilisez le middleware cors pour activer les requêtes cross-origin
+app.use(cors());
 
 // Routes
 // app.use("/api/boards", require("./routes/boardRoutes"));
