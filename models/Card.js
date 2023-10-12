@@ -7,7 +7,7 @@ const cardSchema = new mongoose.Schema({
   priority: {
     type: String,
     enum: ["low", "medium", "high"],
-    default: "todo",
+    default: "low",
   },
   state: {
     type: String,
